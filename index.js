@@ -15,6 +15,18 @@ let data = [
 let tbody = document.querySelector("#tbody")
 
 
+
+    document.getElementById("search").addEventListener("keyup", function(e){
+
+        let val = e.target.value.toUpperCase()
+
+        let searchData = data.filter((ele) => !ele.list.toUpperCase().indexOf(val))
+
+        showData(searchData)
+
+    })
+
+
 document.querySelector("#form").addEventListener("submit", function(e){
     e.preventDefault()
 
@@ -59,6 +71,9 @@ document.querySelector("#form").addEventListener("submit", function(e){
             task : document.querySelector("#task").value
         }
          data.push(obj)
+
+        localStorage.setItem("data",JSON.stringify(data))
+        showData(JSON.parse(localStorage.getItem("data")))
 
          showData(data)
     }
@@ -152,6 +167,9 @@ function edit(id){
             document.querySelector("#id").value = ele.id
         }
 
+        localStorage.setItem("data",JSON.stringify(data))
+        showData(JSON.parse(localStorage.getItem("data")))
+
     })
 
 }
@@ -162,8 +180,14 @@ function del(id){
 
     let delData = data.filter((ele) => ele.id !=id)
 
-    data = delData
-    showData(delData)
+    // data = delData
+    // showData(delData)
+
+    localStorage.setItem("data",JSON.stringify(delData))
+
+    data = JSON.parse(localStorage.getItem("data"))
+
+    showData(data)
 
 }
 
@@ -180,9 +204,9 @@ function showData(delData){
                     
                     <td >${ele.task}</td>
                     
-                     <td><button class="btn btn-warning rounded-pill" onclick="edit(${ele.id})">Edit</button></td>
+                     <td><button class="btn primary rounded-pill" onclick="edit(${ele.id})">✏️</button></td>
     
-                     <td><button class="btn btn-danger rounded-pill" onclick="del(${ele.id})">Delete</button></td>
+                     <td><button class="btn  rounded-pill" onclick="del(${ele.id})">🗑️</button></td>
 
 
                       <td ><input type="checkbox" onclick="check"></td>
@@ -210,7 +234,7 @@ function showData(delData){
     })
 
 }
-
+    data = JSON.parse(localStorage.getItem("data"))
 
 function showData(data){
 
@@ -226,9 +250,9 @@ function showData(data){
                     
                     <td class="h4">${ele.task}</td>
 
-                     <td><button class="btn btn-warning rounded-pill" onclick="edit(${ele.id})">Edit</button></td>
+                     <td><button class="btn primary rounded-pill" onclick="edit(${ele.id})">✏️</button></td>
     
-                     <td><button class="btn btn-danger rounded-pill" onclick="del(${ele.id})">Delete</button></td>
+                     <td><button class="btn  rounded-pill" onclick="del(${ele.id})">🗑️</button></td>
 
                      <td ><input id="stat" onchange="check(${ele.id})" value="true" type="checkbox" ${ele.status ? "checked" : ""} class="status1"  /> </td>
 
