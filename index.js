@@ -69,7 +69,8 @@ document.querySelector("#form").addEventListener("submit", function(e){
 
             id : Math.round(num*1000),
             task : document.querySelector("#task").value,
-            status : false
+            status : false,
+            time : Date()
         }
          data.push(obj)
 
@@ -176,7 +177,10 @@ function showMore(id){
              <div class="offcanvas-body">
                  
                <ul>
-                <li>${el.task}</li>
+                <li>List : ${el.task}</li>
+                <li>id : ${el.id}</li>
+                <li>status : ${el.status}</li>
+                
                </ul>
          
              </div>
@@ -184,9 +188,6 @@ function showMore(id){
             `
         })
 
-  
-    
-   
 
 }
 
@@ -210,7 +211,15 @@ function edit(id){
 
 }
 
+function complete(){
+    let subproduct = data.filter((ele) => ele.status == true)
+    showData(subproduct)
+}
 
+function uncomplete(){
+    let subproduct = data.filter((ele) => ele.status != true)
+    showData(subproduct)
+}
 
 function del(id){
 
@@ -264,6 +273,7 @@ function del(id){
 //     })
 
 // }
+
     data = JSON.parse(localStorage.getItem("data")) || []
 
 function showData(data){
