@@ -68,7 +68,8 @@ document.querySelector("#form").addEventListener("submit", function(e){
         let obj = {
 
             id : Math.round(num*1000),
-            task : document.querySelector("#task").value
+            task : document.querySelector("#task").value,
+            status : false
         }
          data.push(obj)
 
@@ -133,12 +134,19 @@ document.querySelector("#form").addEventListener("submit", function(e){
 
 
 function check(id){
-    let statusData = data.map((ele) => {
+
+
+
+ let checkData = JSON.parse(localStorage.getItem("data"))
+
+    let statusData = checkData.map((ele) => {
         if(ele.id == id){
             ele.status = !ele.status;
         }
          return ele;
     })
+
+    localStorage.setItem("data",JSON.stringify(statusData))
     
      showData(statusData);
     
@@ -147,11 +155,39 @@ function check(id){
     }
 
 
-function shoeMore(id){
-    let data = data.filter((ele) => ele.id == id)
+function showMore(id){
+
+   let data= JSON.parse(localStorage.getItem("data"))
+
+    let showDatadata = data.filter((ele) => ele.id == id)
     console.log(data)
 
-    showData(shoeMore)
+
+    document.querySelector(".offcanvas").innerHTML = ""
+
+     showDatadata.map((el) => {
+
+            document.querySelector(".offcanvas").innerHTML = `
+            
+            <div class="offcanvas-header">
+                 <h5 id="offcanvasRightLabel"> Know more </h5>
+                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+             </div>
+             <div class="offcanvas-body">
+                 
+               <ul>
+                <li>${el.task}</li>
+               </ul>
+         
+             </div>
+         
+            `
+        })
+
+  
+    
+   
+
 }
 
 
@@ -192,49 +228,43 @@ function del(id){
 }
 
 
-function showData(delData){
 
-    tbody.innerHTML =""
+// function showData(delData){
 
-    delData.map((ele) => {
+//     tbody.innerHTML =""
 
-        tbody.innerHTML += `
+//     delData.map((ele) => {
 
-          <tr class="${ele.status ? "table-success" : "table-danger" }">
+//         tbody.innerHTML += `
+
+//           <tr class="${ele.status ? "table-success" : "table-danger" }">
                     
-                    <td >${ele.task}</td>
+//                     <td >${ele.task}</td>
                     
-                     <td><button class="btn primary rounded-pill" onclick="edit(${ele.id})">✏️</button></td>
+//                      <td><button class="btn primary rounded-pill" onclick="edit(${ele.id})">✏️</button></td>
     
-                     <td><button class="btn  rounded-pill" onclick="del(${ele.id})">🗑️</button></td>
+//                      <td><button class="btn  rounded-pill" onclick="del(${ele.id})">🗑️</button></td>
 
 
-                      <td ><input type="checkbox" onclick="check"></td>
+//                       <td ><input type="checkbox" onclick="check"></td>
 
-                     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                        <div class="offcanvas-header">
-                            <h5 id="offcanvasRightLabel"> Know more </h5>
-                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            
-                            ${ele.task}</br>
-                            ${ele.id}</br>
-                            ${ele.status ? "table-success" : "table-danger" }
+                    
+//                          <td>
 
-                        </div>
-                        </div>
-                       
+//                       <button onclick="shoeMore" class="btn " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">  ⁝ </button>
 
-                </tr>
+
+//                       </td>
+
+//                 </tr>
             
 
-        `
+//         `
 
-    })
+//     })
 
-}
-    data = JSON.parse(localStorage.getItem("data"))
+// }
+    data = JSON.parse(localStorage.getItem("data")) || []
 
 function showData(data){
 
@@ -244,43 +274,31 @@ function showData(data){
     data.map((ele) => {
 
         tbody.innerHTML += `
-    
-                 <tr class="${ele.status ? "table-success" : "table-danger" }">
-                    
-                    
-                    <td class="h4">${ele.task}</td>
 
-                     <td><button class="btn primary rounded-pill" onclick="edit(${ele.id})">✏️</button></td>
-    
-                     <td><button class="btn  rounded-pill" onclick="del(${ele.id})">🗑️</button></td>
-
-                     <td ><input id="stat" onchange="check(${ele.id})" value="true" type="checkbox" ${ele.status ? "checked" : ""} class="status1"  /> </td>
-
-                      <td>
-
-                      <button onclick="shoeMore" class="btn " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">  ⁝ </button>
-
-                        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                        <div class="offcanvas-header">
-                            <h5 id="offcanvasRightLabel"> Know more </h5>
-                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            
-                            ${ele.task}</br>
-                            ${ele.id}</br>
-                            ${ele.status ? "table-success" : "table-danger" }
-
-                        </div>
-                        </div>
+        <tr class="${ele.status ? "table-success" : "table-danger" }">
+                  
+                  <td >${ele.task}</td>
+                  
+                   <td><button class="btn primary rounded-pill" onclick="edit(${ele.id})">✏️</button></td>
+  
+                   <td><button class="btn  rounded-pill" onclick="del(${ele.id})">🗑️</button></td>
 
 
-                      </td>
+                  <td ><input type="checkbox" ${ele.status ? "checked" : ""} onchange="check(${ele.id})"></td>
 
-    
-                </tr>
-        
-        `
+                  
+                       <td>
+
+                    <button onclick="showMore(${ele.id})" class="btn " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">  ⁝ </button>
+
+
+                    </td>
+
+              </tr>
+          
+
+      `
+
     
     })
     
@@ -291,44 +309,34 @@ function showData(data){
 
 
 
+data = JSON.parse(localStorage.getItem("data")) || []
+
 data.map((ele) => {
 
     tbody.innerHTML += `
 
-             <tr>
-               
-                <td class="h4>${ele.task}</td>
+    <tr class="${ele.status ? "table-success" : "table-danger" }">
               
-                 <td><button class="btn btn-warning " onclick="edit(${ele.id})">Edit</button></td>
+              <td >${ele.task}</td>
+              
+               <td><button class="btn primary rounded-pill" onclick="edit(${ele.id})">✏️</button></td>
 
-                 <td><button class="btn btn-danger" onclick="del(${ele.id})">Delete</button></td>
-
-                    <td ><input id="stat" onchange="check(${ele.id})" value="true" type="checkbox" ${ele.status ? "checked" : ""} class="status1"  /> </td>
-
-                     <td>
-
-                      <button onclick="shoeMore" class="btn " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">  ⁝ </button>
-
-                        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                        <div class="offcanvas-header">
-                            <h5 id="offcanvasRightLabel"> Know more </h5>
-                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            
-                            ${ele.task}</br>
-                            ${ele.id}</br>
-                            ${ele.status ? "table-success" : "table-danger" }
-                        </div>
-                        </div>
+               <td><button class="btn  rounded-pill" onclick="del(${ele.id})">🗑️</button></td>
 
 
-                      </td>
+                <td ><input type="checkbox" ${ele.status ? "checked" : ""} onchange="check(${ele.id})"></td>
+
+              
+                   <td>
+
+                <button onclick="showMore(${ele.id})" class="btn " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">  ⁝ </button>
 
 
-            </tr>
-        
+                </td>
 
-    `
+          </tr>
+      
+
+  `
 
 })
